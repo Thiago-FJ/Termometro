@@ -1,0 +1,56 @@
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(0,1,5,4,3,2);
+int mapa;
+int i;
+int temp;
+void setup()
+{
+  lcd.begin(16,2); 
+  for(i=6;i<=13;i++){
+  	pinMode(i,OUTPUT);
+  }
+}
+
+void loop()
+{
+  
+  temp = map(analogRead(A1),20,358,-40,125);
+  ses(-40, -20, 1, "Temp. Baixa");
+  ses(-20, 0, 2, "Temp. Baixa");
+  ses(0, 20, 3, "Temp. Normal");
+  ses(20,40, 4, "Temp. Normal");
+  ses(40, 60, 5, "Temp. Alta");
+  ses(60, 80, 6, "Temp. Alta");
+  ses(80, 100, 7, "Temp. M. Alta");
+  ses(100, 125,8, "Temp. M. Alta");
+ 
+}
+
+void lcdP(char estado[]){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("C:");
+  lcd.print(temp);
+  lcd.print("   F:");
+  lcd.print(int(1.8*temp)+32);
+  lcd.setCursor(0,1);
+  lcd.print(estado);
+  delay(100); 
+}
+
+void liga(int qnt){
+  for(i=6;i<=13;i++){
+  	digitalWrite(i,0);
+  }
+  for(i=6;i<=qnt+5;i++){
+  	digitalWrite(i,1);
+  }
+}
+
+void ses(int min, int max, int pins, char estado1[]){
+  if((temp>=min) && (temp<=max)){
+    liga(pins);
+    lcdP(estado1);
+  }
+}
